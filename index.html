@@ -281,9 +281,178 @@
             animation: bounce 0.4s ease-out;
             color: #764ba2;
         }
+
+        /* Navbar Styles */
+        nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .navbar-brand {
+            color: white;
+            font-size: 1.8em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .navbar-menu {
+            display: flex;
+            gap: 15px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .navbar-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .navbar-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-btn:active {
+            transform: scale(0.98);
+        }
+
+        .theme-toggle {
+            font-size: 1.3em;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+            transition: all 0.3s ease-out;
+            padding: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(20deg) scale(1.1);
+        }
+
+        .separator {
+            width: 1px;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background: #1a1a1a;
+        }
+
+        body.dark-mode .container {
+            background: #2d2d2d;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode h1 {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .todo-item {
+            background: #3d3d3d;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .todo-item:hover {
+            background: #4d4d4d;
+        }
+
+        body.dark-mode .todo-text {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .empty-state {
+            color: #999;
+        }
+
+        body.dark-mode .stats {
+            border-top-color: #3d3d3d;
+        }
+
+        body.dark-mode #todoInput {
+            background: #3d3d3d;
+            border-color: #555;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode #todoInput::placeholder {
+            color: #999;
+        }
+
+        body.dark-mode #todoInput:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
     </style>
 </head>
 <body>
+    <nav>
+        <div class="navbar-container">
+            <div class="navbar-brand" onclick="showAbout()">
+                <span>📝</span>
+                <span>Todo Pro</span>
+            </div>
+            <ul class="navbar-menu">
+                <button class="navbar-btn" onclick="clearCompleted()" title="Clear all completed tasks">
+                    <span>🗑️</span> Clear Completed
+                </button>
+                <div class="separator"></div>
+                <button class="navbar-btn" onclick="exportTodos()" title="Export tasks as JSON">
+                    <span>📥</span> Export
+                </button>
+                <button class="navbar-btn" onclick="importTodos()" title="Import tasks from JSON">
+                    <span>📤</span> Import
+                </button>
+                <div class="separator"></div>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+                    🌙
+                </button>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container">
         <h1>📝 My Todo List</h1>
         
@@ -437,6 +606,93 @@
 
         // Load todos on page load
         loadTodos();
+
+        // Initialize theme
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.querySelector('.theme-toggle').textContent = '☀️';
+        }
+
+        // Navbar Functions
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const themeToggle = document.querySelector('.theme-toggle');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '☀️';
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '🌙';
+            }
+        }
+
+        function clearCompleted() {
+            const completedCount = todos.filter(t => t.completed).length;
+            
+            if (completedCount === 0) {
+                alert('No completed tasks to clear!');
+                return;
+            }
+            
+            if (confirm(`Clear ${completedCount} completed task(s)?`)) {
+                todos = todos.filter(t => !t.completed);
+                saveTodos();
+                loadTodos();
+            }
+        }
+
+        function exportTodos() {
+            const dataStr = JSON.stringify(todos, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `todos-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            alert('✅ Tasks exported successfully!');
+        }
+
+        function importTodos() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = (event) => {
+                    try {
+                        const importedTodos = JSON.parse(event.target.result);
+                        
+                        if (!Array.isArray(importedTodos)) {
+                            throw new Error('Invalid format');
+                        }
+                        
+                        if (confirm('Replace current tasks with imported ones?')) {
+                            todos = importedTodos;
+                            saveTodos();
+                            loadTodos();
+                            alert('✅ Tasks imported successfully!');
+                        }
+                    } catch (err) {
+                        alert('❌ Error importing file. Make sure it\'s a valid JSON file.');
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        function showAbout() {
+            alert('️📝 Todo Pro\n\nA beautiful, feature-rich todo list application.\n\nFeatures:\n✅ Add, complete, and delete tasks\n🌙 Dark/Light mode\n💾 Auto-save to local storage\n📥 Export/Import tasks\n📊 Live statistics\n\nMade with ❤️ using HTML, CSS & JavaScript');
+        }
     </script>
 </body>
 </html>
