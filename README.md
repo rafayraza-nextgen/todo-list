@@ -41,6 +41,7 @@ A simple, elegant, and interactive todo list web application built with HTML, CS
 ```
 todo-list/
 ├── index.html       # Main application file
+├── style.css        # All CSS styles and animations
 └── README.md        # This file
 ```
 
@@ -64,7 +65,7 @@ Feel free to delete these and add your own tasks!
 
 ### Technologies Used
 - **HTML5** - Semantic markup
-- **CSS3** - Styling with gradients and animations
+- **CSS3** - Styling with gradients, animations, and responsive design
 - **Vanilla JavaScript** - No frameworks required
 
 ## Features Breakdown
