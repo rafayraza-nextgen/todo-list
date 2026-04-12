@@ -85,9 +85,10 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-start;
             align-items: center;
-            padding: 20px;
+            padding-top: 90px;
             animation: fadeIn 0.5s ease-in;
         }
 
@@ -284,11 +285,14 @@
 
         /* Navbar Styles */
         nav {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #FF6B6B 0%, #4ECDC4 50%, #45B7D1 100%);
             padding: 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            position: sticky;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
             z-index: 1000;
             animation: slideInDown 0.5s ease-out;
         }
